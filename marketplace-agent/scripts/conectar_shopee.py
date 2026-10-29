@@ -84,9 +84,20 @@ class Handler(BaseHTTPRequestHandler):
         shop_id = (query.get("shop_id") or [None])[0]
         estado = (query.get("state") or [None])[0]
         if not codigo:
-            ESTADO["erro"] = "callback sem code (autorizacao recusada?)"
-            ESTADO["recebido"] = True
-            self._responder("Autorizacao nao concluida", "A Shopee nao devolveu o code.")
+            # Sondagens de saude/validacao de dominio nao devem derrubar o servidor.
+            # So encerra se a Shopee devolver um erro explicito de autorizacao.
+            if query.get("error") or query.get("error_description"):
+                ESTADO["erro"] = "autorizacao recusada: " + str(
+                    query.get("error") or query.get("error_description")
+                )
+                ESTADO["recebido"] = True
+                self._responder("Autorizacao recusada", "A Shopee devolveu um erro.")
+            else:
+                self._responder(
+                    "Aguardando autorizacao",
+                    "Callback sem code; o conector continua esperando a autorizacao.",
+                    400,
+                )
             return
         if ESTADO.get("state") and estado and estado != ESTADO["state"]:
             ESTADO["erro"] = "state invalido"
