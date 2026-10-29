@@ -24,8 +24,10 @@ HOSTS = {
         "cn": "https://openplatform.shopee.cn",
     },
     "sandbox": {
+        # O host de sandbox .com.br nao resolve em DNS publico (NXDOMAIN).
+        # O sandbox e global em Singapura; usamos o mesmo host para BR.
         "global": "https://openplatform.sandbox.test-stable.shopee.sg",
-        "br": "https://openplatform.sandbox.test-stable.shopee.com.br",
+        "br": "https://openplatform.sandbox.test-stable.shopee.sg",
         "cn": "https://openplatform.sandbox.test-stable.shopee.cn",
     },
 }
@@ -38,7 +40,8 @@ AUTH_HOSTS = {
     },
     "sandbox": {
         "global": "https://open.sandbox.test-stable.shopee.com",
-        "br": "https://open.sandbox.test-stable.shopee.com.br",
+        # o host .com.br tambem nao resolve; o auth sandbox e global
+        "br": "https://open.sandbox.test-stable.shopee.com",
         "cn": "https://open.sandbox.test-stable.shopee.cn",
     },
 }

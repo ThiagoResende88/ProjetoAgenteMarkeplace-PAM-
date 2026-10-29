@@ -45,7 +45,10 @@
 
 ✅ Endpoints de **autorização** (páginas web, não API):
 `https://open.shopee.com/auth` · `https://open.shopee.cn/auth` · `https://open.shopee.com.br/auth`
-Sandbox: `https://open.sandbox.test-stable.shopee.com/auth`, `https://open.sandbox.test-stable.shopee.cn/auth`, `https://open.sandbox.test-stable.shopee.com.br/auth`
+Sandbox: `https://open.sandbox.test-stable.shopee.com/auth`, `https://open.sandbox.test-stable.shopee.cn/auth`.
+⚠️ Em 29/10/2026 os hosts `openplatform.sandbox.test-stable.shopee.com.br` e
+`open.sandbox.test-stable.shopee.com.br` retornaram **NXDOMAIN** no DNS público;
+o sandbox global em Singapura respondeu. O código usa o host global para BR.
 Fonte: [Authorization and Authentication](https://open.shopee.com/developer-guide/20)
 
 ⚠️ Atenção: os hosts de *auth* (`open.shopee.com`) são diferentes dos hosts de *API* (`partner.shopeemobile.com`). Não confundir.
