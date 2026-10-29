@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+"""Atalho de linha de comando para o mktagent (sem instalar pacote)."""
+import sys
+from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(RAIZ / "src"))
+
+from mktagent.cli import main  # noqa: E402
+
+if __name__ == "__main__":
+    raise SystemExit(main())

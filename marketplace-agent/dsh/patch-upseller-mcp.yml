@@ -1,0 +1,28 @@
+# MCP oficial do UpSeller (opcional, separado do bloco principal).
+#
+# Usado pelo instalador com a flag --com-upseller, que le
+# UPSELLER_CLIENT_ID e UPSELLER_MCP_TOKEN do .env e injeta o bloco abaixo em
+# $DSH_HOME/profiles/<perfil>/cordis.patch.yml.
+#
+# Documentacao oficial (Central de Ajuda UpSeller, 25/10/2026):
+# - URL: https://openapi.upseller.com/mcp (Streamable HTTP)
+# - Headers: X-Upseller-Client-Id (User ID) e X-Upseller-Api-Token (MCP Token)
+# - Hoje expoe 2 ferramentas: listar armazens e consultar estoque por SKU.
+
+# >>> mktagent-upseller
+- insert:
+    - id: mcp-upseller
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: upseller
+        transport: streamable-http
+        url: https://openapi.upseller.com/mcp
+        headers:
+          X-Upseller-Client-Id: '{{UPSELLER_CLIENT_ID}}'
+          X-Upseller-Api-Token: '{{UPSELLER_MCP_TOKEN}}'
+          X-Upseller-Language: pt
+        toolCallTimeoutMs: 60000
+        failOnStartupError: false
+        reconnect:
+          enabled: true
+# <<< mktagent-upseller

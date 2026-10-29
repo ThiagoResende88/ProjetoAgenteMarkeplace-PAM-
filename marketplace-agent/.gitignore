@@ -1,0 +1,8 @@
+dados/
+saidas/
+entradas/*
+!entradas/LEIA-ME.txt
+.env
+__pycache__/
+*.pyc
+.venv/

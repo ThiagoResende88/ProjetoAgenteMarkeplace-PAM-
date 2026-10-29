@@ -1,0 +1,43 @@
+﻿tipo;descricao;categoria;valor;vencimento;pago_em;marketplace;recorrente;observacao
+pagar;Fornecedor - reposicao de estoque;fornecedor;4.120,00;10/08/2026;10/08/2026;;sim;lote mensal
+pagar;Shopee Ads;marketing;900,00;15/08/2026;15/08/2026;shopee;sim;
+pagar;TikTok Ads;marketing;500,00;15/08/2026;15/08/2026;tiktok;sim;
+pagar;Assinatura ERP;software;129,90;05/08/2026;05/08/2026;;sim;
+pagar;Contabilidade;contabilidade;420,00;20/08/2026;20/08/2026;;sim;
+pagar;Prolabore;pessoal;2.800,00;05/08/2026;05/08/2026;;sim;
+pagar;Aluguel do galpao;estrutura;1.500,00;08/08/2026;08/08/2026;;sim;
+pagar;Energia eletrica;estrutura;248,00;18/08/2026;18/08/2026;;sim;
+pagar;Embalagens e insumos;insumo;310,00;12/08/2026;12/08/2026;;nao;
+receber;Reembolso de frete Shopee;outros;180,00;22/08/2026;;shopee;nao;aguardando
+pagar;Fornecedor - reposicao de estoque;fornecedor;4.160,00;10/09/2026;10/09/2026;;sim;lote mensal
+pagar;Shopee Ads;marketing;1.050,00;15/09/2026;15/09/2026;shopee;sim;
+pagar;TikTok Ads;marketing;600,00;15/09/2026;15/09/2026;tiktok;sim;
+pagar;Assinatura ERP;software;129,90;05/09/2026;05/09/2026;;sim;
+pagar;Contabilidade;contabilidade;420,00;20/09/2026;20/09/2026;;sim;
+pagar;Prolabore;pessoal;2.800,00;05/09/2026;05/09/2026;;sim;
+pagar;Aluguel do galpao;estrutura;1.500,00;08/09/2026;08/09/2026;;sim;
+pagar;Energia eletrica;estrutura;249,00;18/09/2026;18/09/2026;;sim;
+pagar;Embalagens e insumos;insumo;310,00;12/09/2026;12/09/2026;;nao;
+receber;Reembolso de frete Shopee;outros;180,00;22/09/2026;;shopee;nao;aguardando
+pagar;Fornecedor - reposicao de estoque;fornecedor;4.200,00;10/10/2026;10/10/2026;;sim;lote mensal
+pagar;Shopee Ads;marketing;1.200,00;15/10/2026;15/10/2026;shopee;sim;
+pagar;TikTok Ads;marketing;700,00;15/10/2026;15/10/2026;tiktok;sim;
+pagar;Assinatura ERP;software;129,90;05/10/2026;05/10/2026;;sim;
+pagar;Contabilidade;contabilidade;420,00;20/10/2026;20/10/2026;;sim;
+pagar;Prolabore;pessoal;2.800,00;05/10/2026;05/10/2026;;sim;
+pagar;Aluguel do galpao;estrutura;1.500,00;08/10/2026;08/10/2026;;sim;
+pagar;Energia eletrica;estrutura;250,00;18/10/2026;18/10/2026;;sim;
+pagar;Embalagens e insumos;insumo;310,00;12/10/2026;12/10/2026;;nao;
+receber;Reembolso de frete Shopee;outros;180,00;22/10/2026;;shopee;nao;aguardando
+pagar;Fornecedor - reposicao de estoque;fornecedor;4.240,00;10/11/2026;;;sim;lote mensal
+pagar;Shopee Ads;marketing;1.350,00;15/11/2026;;shopee;sim;
+pagar;TikTok Ads;marketing;800,00;15/11/2026;;tiktok;sim;
+pagar;Assinatura ERP;software;129,90;05/11/2026;;;sim;
+pagar;Contabilidade;contabilidade;420,00;20/11/2026;;;sim;
+pagar;Prolabore;pessoal;2.800,00;05/11/2026;;;sim;
+pagar;Aluguel do galpao;estrutura;1.500,00;08/11/2026;;;sim;
+pagar;Energia eletrica;estrutura;251,00;18/11/2026;;;sim;
+pagar;Embalagens e insumos;insumo;310,00;12/11/2026;;;nao;
+receber;Reembolso de frete Shopee;outros;180,00;22/11/2026;;shopee;nao;aguardando
+receber;Venda fora do marketplace (Pix);outros;350,00;22/11/2026;;;nao;cobrar cliente
+pagar;Fornecedor - lote setembro (atrasado);fornecedor;1.240,00;10/10/2026;;;nao;negociar prazo

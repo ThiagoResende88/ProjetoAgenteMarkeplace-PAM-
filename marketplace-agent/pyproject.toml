@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mktagent"
+version = "0.1.0"
+description = "Agente de gestao financeira e operacional para Shopee e TikTok Shop"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+mkt = "mktagent.cli:main"
+mkt-mcp = "mktagent.mcp_server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

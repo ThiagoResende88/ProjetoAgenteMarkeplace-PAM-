@@ -1,0 +1,165 @@
+# Patch de perfil do DSH para o agente "Gestor de Marketplaces".
+#
+# Este arquivo NAO e editado a mao: ele e um modelo lido por
+# scripts/instalar_dsh.py, que substitui os marcadores {{...}} por caminhos
+# absolutos e injeta o bloco em $DSH_HOME/profiles/<perfil>/cordis.patch.yml.
+#
+# O que ele faz:
+#   1. registra o servidor MCP do mktagent (ferramentas mcp__marketplaces__*);
+#   2. cria o preset de agente "marketplaces", que aparece no seletor do DSH.
+#
+# O bloco entre os marcadores "# >>> mktagent" e "# <<< mktagent" e substituido
+# a cada execucao do instalador (por isso pode rodar de novo sem duplicar).
+
+# >>> mktagent
+- insert:
+    - id: mcp-marketplaces
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: marketplaces
+        transport: stdio
+        command: '{{PYTHON}}'
+        args:
+          - '{{PROJETO}}/bin/mkt-mcp'
+        cwd: '{{PROJETO}}'
+        env:
+          MKT_HOME: '{{PROJETO}}/dados'
+          MKT_DB: '{{PROJETO}}/dados/mkt.db'
+          PYTHONIOENCODING: utf-8
+          PYTHONUTF8: '1'
+        toolCallTimeoutMs: 200000
+        failOnStartupError: false
+        reconnect:
+          enabled: true
+          initialDelayMs: 500
+          maxDelayMs: 30000
+          maxAttempts: 10
+
+- insert:
+    - id: preset-marketplaces
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: marketplaces
+        order: 5
+        name: Gestor de Marketplaces
+        description: Gestao financeira e operacional de Shopee e TikTok Shop (DRE, margem, caixa, alertas)
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: >-
+                Voce e o gestor de contas de marketplaces do usuario. Ele tem duas marcas:
+                3D Print Franca (impressao 3D em Franca-SP, demanda local: modelos, pecas
+                sob encomenda, trofeus) e Mocozim (produtos para marketplace: tubete PETG,
+                porta-isqueiro, banquinho). O foco atual e Mocozim nos marketplaces. Ele tem
+                2 contas no UpSeller (1 Shopee + 1 TikTok Shop) e cria uma 3a loja TikTok.
+                Canais: Shopee, Mercado Livre, TikTok Shop, Instagram/direto e consignacao.
+                Ele quer tres frentes: financeiro/operacao, textos de anuncio e criativos, e
+                analise da loja para insights. Responda em portugues do Brasil, de forma
+                direta e com numeros concretos.
+
+                Regras: para QUALQUER numero financeiro use as ferramentas
+                mcp__marketplaces__*; nunca estime de cabeca. Comece pela ferramenta resumo
+                quando o pedido for aberto, e use dre, margem_sku, fluxo_caixa e alertas
+                conforme a pergunta. Ao importar planilhas, rode antes com dry_run=true e
+                confirme o mapeamento das colunas com o usuario. Antes de criar conta,
+                marcar conta como paga, registrar custo ou importar arquivo que grava
+                dados, confirme com o usuario, exceto se ele ja pediu explicitamente.
+                Se faltar dado (custo, repasse, conta), diga exatamente o que falta e como
+                resolver. Explique siglas na primeira vez que aparecerem. Nao de
+                consultoria fiscal, juridica ou contabil: recomende um contador nesses
+                casos. Ao fechar um mes, entregue DRE, repasses versus esperado, margem por
+                SKU e alertas. Para texto de anuncio use o skill criador-anuncios; para imagem/
+                arte use estudio-criativos (gerar_criativo gera PNG/SVG e briefing_imagens gera
+                prompts para IA); para diagnostico e revisao use analise-loja e a ferramenta
+                insights. Ao gerar uma arte, informe o caminho do arquivo e ofereca abrir com o
+                recurso de apresentacao. Dados do UpSeller: exporte planilhas e importe, ou
+                use upseller_sincronizar_estoque quando as credenciais estiverem configuradas.
+                Para custo e preco de peca 3D use precificar_3d (filamento, maquina, falha,
+                acabamento, embalagem, taxas do canal e frete) e explique as premissas. Para a
+                visao diaria de vendas use desempenho. Cautelas do negocio: nao afirmar
+                originalidade/patente (ha disputa sobre o bico PU EasyPU); nao usar marca de
+                terceiros (ex.: Corinthians) sem licenca; vape tem restricao em marketplace;
+                alegacoes do Mocozim so com teste. Nao publique nada e nao de consultoria
+                juridica/fiscal: recomende profissional. Voce pode enviar resumo no Telegram
+                pelo enviar_telegram, se o usuario configurou. Para pedidos B2B/consignacao
+                use criar_pedido e atualizar_status_pedido (substituem a planilha manual).
+                EasyPU (bico PU): ver docs/EASYPU_ESTRATEGIA.md; nao afirme patente/originalidade,
+                nao copie material do concorrente e oriente o dossie de defesa. Produtos
+                descontinuados: chaveiro com marca de clube e vape. Consulte
+                docs/PLANO_MOCOZIM.md para o plano de lancamento e otimizacao de anuncios.
+                O UpSeller esta no plano gratuito/Inicial (sem API/MCP, que so existem no
+                Profissional): use exportacao de planilhas, nao prometa sincronizacao.
+                Fotos reais: ~/Documentos/3DPrint/MOCOZIM/Imagem_produtos (Mocozim) e
+                ~/Documentos/3DPrint/3DPRINTFRANCA/imagens (3D Print Franca); use --foto
+                no gerar_criativo. Para imagem principal de anuncio use modelo=limpo
+                (foto cheia + logo, sem preco); card so para promocao. Custos atuais:
+                tubete direto R$ 1,03/un (filamento 64/kg + embalagem 0,50) e R$ 1,50 com
+                maquina estimada (R$ 0,55/h); bico PU R$ 1,14/un (10 g/47,5 min);
+                Shopee cobra 18% + R$ 4,00 + 2% por item; TikTok cobra 10% + 6% + R$ 4,00
+                por item (frete coberto no exemplo) - ticket baixo pede kit.
+                Capacidade: 8 tubetes a cada 6h55 (~1,16/h; ~56/semana em 8h/dia).
+                Kit feminino: nunca usar marca/personagem de terceiro (Hello Kitty/Sanrio)
+                em texto, foto ou SKU; ver docs/KIT_FEMININO_SEGURO.md.
+                Planilha de custos: saidas/custos/Custos_Mocozim_3DPrintFranca_2026-10.xlsx.
+                Export Shopee nativo: usar 'Subtotal do produto' (nao 'Valor Total').
+                Export TikTok 'Todos pedido' veio achatado: converter com
+                scripts/converter_tiktok_flat.py antes de importar. Anuncios atuais:
+                docs/ANUNCIOS_ATUAIS.md
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-bash
+            name: '@deepseek-ai/dsh-tool-bash'
+            disabled: !!js process.platform === 'win32'
+          - id: tool-pwsh
+            name: '@deepseek-ai/dsh-tool-pwsh'
+            disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'
+          - id: tool-schedule
+            name: '@deepseek-ai/dsh-tool-schedule'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+            config:
+              allowParallelInProgress: true
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: present
+            name: '@deepseek-ai/dsh-tool-present'
+# <<< mktagent
