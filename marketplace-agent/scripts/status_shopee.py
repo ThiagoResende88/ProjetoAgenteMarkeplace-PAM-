@@ -22,7 +22,13 @@ def main() -> int:
         print("Nenhum token salvo. Rode scripts/conectar_shopee.py primeiro.")
         return 1
     dados = json.loads(caminho.read_text(encoding="utf-8"))
-    for shop_id, token in dados.items():
+    # Separa ambientes: em producao nao tenta usar o token de sandbox.
+    ativos = {k: v for k, v in dados.items() if v.get("ambiente") == config.shopee.ambiente}
+    if not ativos:
+        print(f"Nenhum token para o ambiente ativo ({config.shopee.ambiente}).")
+        print("Tokens disponiveis:", {k: v.get("ambiente") for k, v in dados.items()})
+        return 1
+    for shop_id, token in ativos.items():
         acesso = token.get("access_token") or ""
         expira = token.get("expira_em")
         print(f"shop_id {shop_id} | ambiente {token.get('ambiente')} | token {acesso[:8]}... | expira em {expira}")
