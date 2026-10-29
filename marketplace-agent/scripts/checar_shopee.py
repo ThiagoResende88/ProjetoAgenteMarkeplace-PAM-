@@ -46,7 +46,7 @@ def main() -> int:
             config,
             "GET",
             "/api/v2/public/get_shops_by_partner",
-            params={"page_size": 10, "page_no": 0},
+            params={"page_size": 10, "page_no": 1},
             timeout=25,
         )
         print("OK — partner/key aceitos")
