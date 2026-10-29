@@ -71,3 +71,11 @@ python3 scripts/instalar_dsh.py --dry-run    # mostra o patch do DSH
 - `tests/` — unittest; `examples/` — planilhas ficticias
 
 Ao mexer no schema do banco, suba `VERSAO_ESQUEMA` e mantenha migracao idempotente.
+
+- Marcas: Mocozim = headshop (tubete, banquinho, seda, porta Bic/isqueiro);
+  3DPrintFranca = demais linhas (bico PU/EasyPU, rosario/chaveiro, pote, porta
+  incenso). Nunca usar marca de terceiro (ex.: Veipar) em titulo/descricao/foto.
+- Anuncios que venderam cairam depois do Ads: antes de reativar Ads, checar
+  violacoes/denuncias e remover marcas de terceiro. Handoff em
+  `docs/HANDOFF_ANUNCIOS.md`.
+- Ads: R$ 300 no periodo (Set R$ 200 + Out R$ 100) ja lancados como marketing.

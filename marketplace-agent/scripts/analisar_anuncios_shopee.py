@@ -51,22 +51,30 @@ def preco_por_titulo(titulo: str) -> float | None:
     return None
 
 
+def marca_de(nome: str) -> str:
+    """Mocozim = headshop; 3DPrintFranca = demais linhas (EasyPU, rosario etc.)."""
+    t = (nome or "").lower()
+    headshop = ("tubo", "tubete", "banquinho", "seda", "porta bic", "porta esqueiro", "isqueiro")
+    return "Mocozim" if any(x in t for x in headshop) else "3DPrintFranca"
+
+
 def sugerir_titulo(nome: str, modelos: list) -> str:
     t = (nome or "").lower()
-    if "kit 10 unidades" in t: return "Kit 10 Aplicadores de PU Easy Vedação 3D em PETG — Mocozim"
-    if "kit 5 unidades" in t: return "Kit 5 Aplicadores de PU Easy Vedação 3D em PETG — Mocozim"
-    if "kit 3 unidades" in t: return "Kit 3 Aplicadores de PU Easy Vedação 3D em PETG — Mocozim"
-    if "kit 2 unidades" in t: return "Kit 2 Aplicadores de PU Easy Vedação 3D em PETG — Mocozim"
+    marca = marca_de(nome)
+    if "kit 10 unidades" in t: return f"Kit 10 Aplicadores de PU Easy Vedação 3D em PETG — {marca}"
+    if "kit 5 unidades" in t: return f"Kit 5 Aplicadores de PU Easy Vedação 3D em PETG — {marca}"
+    if "kit 3 unidades" in t: return f"Kit 3 Aplicadores de PU Easy Vedação 3D em PETG — {marca}"
+    if "kit 2 unidades" in t: return f"Kit 2 Aplicadores de PU Easy Vedação 3D em PETG — {marca}"
     if "aplicador" in t or "easy" in t:
-        if len(modelos) > 1: return "Aplicador de PU Easy Vedação 3D em PETG — 1, 2 ou 3 Unidades"
-        return "Aplicador de PU Easy Vedação 3D em PETG — Mocozim"
+        if len(modelos) > 1: return f"Aplicador de PU Easy Vedação 3D em PETG — 1, 2 ou 3 Unidades | {marca}"
+        return f"Aplicador de PU Easy Vedação 3D em PETG — {marca}"
     if "tubo herm" in t or "tubete" in t: return "Tubete Hermético 3D em PETG 14 cm — Tampa Rosqueada | Mocozim"
-    if "pote" in t: return "Pote Hermético 3D em PETG com Design Geométrico — Mocozim"
-    if "porta incenso" in t: return "Porta Incenso 3D Mandala Flor — Suporte Decorativo em PETG | Mocozim"
-    if "chaveiro" in t: return "Chaveiro Terço 3D Rosário de Bolso Católico — Mocozim"
+    if "pote" in t: return f"Pote Hermético 3D em PETG com Design Geométrico — {marca}"
+    if "porta incenso" in t: return f"Porta Incenso 3D Mandala Flor — Suporte Decorativo em PETG | {marca}"
+    if "chaveiro" in t: return f"Chaveiro Terço 3D Rosário de Bolso Católico — {marca}"
     limpo = re.sub(r"(?i)(veipar|sealbrand|hello kit(ty)?|sanrio|corinthians)", "", nome or "")
     limpo = re.sub(r"\s+", " ", limpo).strip(" -|")
-    return (limpo[:90] + " — 3D PETG Mocozim")[:120]
+    return (limpo[:90] + f" — 3D PETG {marca}")[:120]
 
 
 def problemas(titulo: str, preco, estoque, vendas, custo, margem, imagens):
@@ -174,6 +182,15 @@ def main() -> int:
 
     total_receita = sum(v["receita"] for v in vendas.values())
     total_qtd = sum(v["qtd"] for v in vendas.values())
+    total_taxas = sum(v["taxas"] for v in vendas.values())
+    total_custo = sum(v.get("custo", 0.0) for v in vendas.values())
+    contrib_total = total_receita - total_taxas - total_custo
+    try:
+        conn = sqlite3.connect(DB)
+        ads = (conn.execute("SELECT COALESCE(SUM(valor_centavos),0) FROM contas_financeiras WHERE categoria='marketing'").fetchone()[0] or 0) / 100.0
+        conn.close()
+    except Exception:
+        ads = 0.0
     top = sorted(vendas.items(), key=lambda kv: -kv[1]["receita"])[:5]
     resumo = [["Métrica", "Valor"]]
     resumo += [
@@ -184,6 +201,11 @@ def main() -> int:
         ["Anúncios ativos", len(raw["produtos"])],
         ["Anúncios ativos com venda", sum(1 for a in ativos if a["qtd"] > 0)],
         ["Anúncios ativos sem venda", sum(1 for a in ativos if a["qtd"] == 0)],
+        ["Taxas Shopee (período)", round(total_taxas, 2)],
+        ["CMV estimado", round(total_custo, 2)],
+        ["Contribuição antes de Ads", round(contrib_total, 2)],
+        ["Ads pagos (set+out)", round(ads, 2)],
+        ["Contribuição após Ads", round(contrib_total - ads, 2)],
         ["Item com maior receita", top[0][1]["nome"] if top else ""],
         ["Receita do top item", round(top[0][1]["receita"],2) if top else 0],
     ]
@@ -206,6 +228,8 @@ def main() -> int:
     md.append(f"- Pedidos no histórico: **{len(raw['pedidos'])}**")
     md.append(f"- Unidades: **{total_qtd}** | receita dos itens: **R$ {total_receita:.2f}**")
     md.append(f"- Anúncios ativos: **{len(raw['produtos'])}** | com venda: {sum(1 for a in ativos if a['qtd']>0)} | sem venda: {sum(1 for a in ativos if a['qtd']==0)}")
+    md.append(f"- Taxas Shopee: **R$ {total_taxas:.2f}** | CMV estimado: **R$ {total_custo:.2f}**")
+    md.append(f"- Contribuição antes de Ads: **R$ {contrib_total:.2f}** | Ads pagos: **R$ {ads:.2f}** | após Ads: **R$ {contrib_total-ads:.2f}**")
     md.append("")
     md.append("## Top vendas")
     for iid, reg in top:
@@ -223,7 +247,7 @@ def main() -> int:
         md.append(f"### {a['iid']} — {a['titulo'][:80]}")
         md.append(f"- Vendas: {a['qtd']} un | receita R$ {a['receita']:.2f} | margem {f'{a['margem']*100:.1f}%' if a['margem'] is not None else '—'} | prioridade {a['prioridade']}")
         md.append(f"- Problemas: {a['problemas'] or 'nenhum'}")
-        md.append(f"- Título sugerido: **{a['sugestao']}**")
+        md.append(f"- Marca: **{marca_de(a['titulo'])}** | Título sugerido: **{a['sugestao']}**")
         md.append(f"- Ação: {a['recomendacao']}")
     md.append("")
     md.append("## Fora da lista atual (histórico)")
